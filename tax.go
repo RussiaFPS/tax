@@ -1,4 +1,4 @@
-package tax_go
+package tax
 
 import (
 	"go/parser"
