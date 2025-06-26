@@ -1,4 +1,4 @@
-package main
+package tax
 
 import (
 	"fmt"
@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 )
 
-func getImportList() ([]string, error) {
+func getImportList() (map[string]struct{}, error) {
 	fset := token.NewFileSet()
-	imports := make([]string, 0)
+	imports := make(map[string]struct{})
 
 	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 		if err != nil || !info.Mode().IsRegular() || filepath.Ext(info.Name()) != ".go" {
@@ -24,7 +24,7 @@ func getImportList() ([]string, error) {
 
 		for _, imp := range file.Imports {
 			if imp.Path.Value != "" && imp.Path.Value[0] == '"' {
-				imports = append(imports, imp.Path.Value[1:len(imp.Path.Value)-1])
+				imports[imp.Path.Value[1:len(imp.Path.Value)-1]] = struct{}{}
 			}
 		}
 		return nil
