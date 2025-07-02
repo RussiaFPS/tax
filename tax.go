@@ -8,6 +8,20 @@ import (
 	"path/filepath"
 )
 
+// validImportMaxCount checks if the number of imported packages crosses the limit with count
+func validImportMaxCount(count int) (bool, error) {
+	im, err := getImportList()
+	if err != nil {
+		return false, err
+	}
+
+	if len(im) > count {
+		return false, nil
+	}
+	return true, nil
+}
+
+// getImportList outputs all imports without repetition
 func getImportList() (map[string]struct{}, error) {
 	fset := token.NewFileSet()
 	imports := make(map[string]struct{})
