@@ -4,6 +4,18 @@ import (
 	"testing"
 )
 
+func TestValidImportBan(t *testing.T) {
+	importName := "fmt123"
+	isValid, err := validImportBan(importName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !isValid {
+		t.Errorf("not valid import %s is banned", importName)
+	}
+}
+
 func TestValidImportMaxCount(t *testing.T) {
 	isValid, err := validImportMaxCount(6)
 	if err != nil {
@@ -11,7 +23,7 @@ func TestValidImportMaxCount(t *testing.T) {
 	}
 
 	if !isValid {
-		t.Errorf("not valid max count imports")
+		t.Error("not valid max count imports")
 	}
 }
 

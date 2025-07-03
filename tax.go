@@ -8,6 +8,19 @@ import (
 	"path/filepath"
 )
 
+// validImportBan checks if there is a forbidden package in the import list
+func validImportBan(name string) (bool, error) {
+	im, err := getImportList()
+	if err != nil {
+		return false, err
+	}
+
+	if _, ok := im[name]; ok {
+		return false, nil
+	}
+	return true, nil
+}
+
 // validImportMaxCount checks if the number of imported packages crosses the limit with count
 func validImportMaxCount(count int) (bool, error) {
 	im, err := getImportList()
