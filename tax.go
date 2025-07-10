@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 )
 
-// validImportBan checks if there is a forbidden package in the import list
-func validImportBan(name string) (bool, error) {
-	im, err := getImportList()
+// ValidImportBan checks if there is a forbidden package in the import list
+func ValidImportBan(name string) (bool, error) {
+	im, err := GetImportList()
 	if err != nil {
 		return false, err
 	}
@@ -21,9 +21,9 @@ func validImportBan(name string) (bool, error) {
 	return true, nil
 }
 
-// validImportMaxCount checks if the number of imported packages crosses the limit with count
-func validImportMaxCount(count int) (bool, error) {
-	im, err := getImportList()
+// ValidImportMaxCount checks if the number of imported packages crosses the limit with count
+func ValidImportMaxCount(count int) (bool, error) {
+	im, err := GetImportList()
 	if err != nil {
 		return false, err
 	}
@@ -34,8 +34,8 @@ func validImportMaxCount(count int) (bool, error) {
 	return true, nil
 }
 
-// getImportList outputs all imports without repetition
-func getImportList() (map[string]struct{}, error) {
+// GetImportList outputs all imports without repetition
+func GetImportList() (map[string]struct{}, error) {
 	fset := token.NewFileSet()
 	imports := make(map[string]struct{})
 
