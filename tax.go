@@ -1,35 +1,64 @@
 package tax
 
 import (
+	"fmt"
 	"go/parser"
 	"go/token"
-	"log"
 	"os"
 	"path/filepath"
 )
 
-func GetNamesPackages() {
+// validImportBan checks if there is a forbidden package in the import list
+func validImportBan(name string) (bool, error) {
+	im, err := getImportList()
+	if err != nil {
+		return false, err
+	}
+
+	if _, ok := im[name]; ok {
+		return false, nil
+	}
+	return true, nil
+}
+
+// validImportMaxCount checks if the number of imported packages crosses the limit with count
+func validImportMaxCount(count int) (bool, error) {
+	im, err := getImportList()
+	if err != nil {
+		return false, err
+	}
+
+	if len(im) > count {
+		return false, nil
+	}
+	return true, nil
+}
+
+// getImportList outputs all imports without repetition
+func getImportList() (map[string]struct{}, error) {
 	fset := token.NewFileSet()
+	imports := make(map[string]struct{})
+
 	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 		if err != nil || !info.Mode().IsRegular() || filepath.Ext(info.Name()) != ".go" {
-			return nil // пропускаем файлы, не относящиеся к Go
+			return nil
 		}
 
 		file, err := parser.ParseFile(fset, path, nil, parser.AllErrors|parser.ImportsOnly)
 		if err != nil {
-			log.Printf("Ошибка парсинга файла %q: %v\n", path, err)
-			return nil
+			return fmt.Errorf("File parsing error %q: %v\n", path, err)
 		}
 
 		for _, imp := range file.Imports {
-			if imp.Path.Value != "" && imp.Path.Value[0] == '"' { // проверка валидности пути импорта
-				log.Printf("Импортированный пакет: %s\n", imp.Path.Value[1:len(imp.Path.Value)-1])
+			if imp.Path.Value != "" && imp.Path.Value[0] == '"' {
+				imports[imp.Path.Value[1:len(imp.Path.Value)-1]] = struct{}{}
 			}
 		}
 		return nil
 	})
 
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
+	return imports, nil
 }
