@@ -1,1 +1,3 @@
-# tax-go
+# tax
+
+Package for dependency management in Golang
