@@ -6,7 +6,7 @@ import (
 
 func TestValidImportBan(t *testing.T) {
 	importName := "fmt123"
-	isValid, err := validImportBan(importName)
+	isValid, err := ValidImportBan(importName)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -17,7 +17,7 @@ func TestValidImportBan(t *testing.T) {
 }
 
 func TestValidImportMaxCount(t *testing.T) {
-	isValid, err := validImportMaxCount(6)
+	isValid, err := ValidImportMaxCount(6)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func TestGetImportsList(t *testing.T) {
 		"testing":       {},
 	}
 
-	imports, err := getImportList()
+	imports, err := GetImportList()
 	if err != nil {
 		t.Fatal(err)
 	}
